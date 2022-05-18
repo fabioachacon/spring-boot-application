@@ -2,13 +2,12 @@ package com.parent.ws.app.ui.controllers;
 
 import com.parent.ws.app.service.protocols.UserService;
 import com.parent.ws.app.shared.dto.UserDto;
-import com.parent.ws.app.ui.models.request.UserDetailsRequestModal;
+import com.parent.ws.app.ui.models.request.UserDetailsRequestModel;
 import com.parent.ws.app.ui.models.response.UserRest;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +21,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/check")
-    public String checkStatus() {
-        return "Working";
-    }
-
     @PostMapping
-    public UserRest createUser(@RequestBody UserDetailsRequestModal userDetails) {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
         UserRest restResponse = new UserRest();
         UserDto userDto = new UserDto();
 
@@ -41,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping
-    public String upDateUser() {
+    public String updateUser() {
         return "Update  User";
     }
 

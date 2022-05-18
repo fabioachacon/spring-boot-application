@@ -1,6 +1,6 @@
 package com.parent.ws.app.ui.models.request;
 
-public class UserDetailsRequestModal {
+public class UserDetailsRequestModel {
     private String firstName;
     private String lastName;
     private String email;
