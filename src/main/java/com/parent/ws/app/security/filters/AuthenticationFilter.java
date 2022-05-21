@@ -1,4 +1,4 @@
-package com.parent.ws.app.security;
+package com.parent.ws.app.security.filters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parent.ws.app.SpringApplicationContext;
+import com.parent.ws.app.security.SecurityConstants;
 import com.parent.ws.app.service.protocols.UserService;
 import com.parent.ws.app.shared.dto.UserDto;
 import com.parent.ws.app.ui.models.request.UserLoginRequestModel;

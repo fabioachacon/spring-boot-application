@@ -1,5 +1,7 @@
 package com.parent.ws.app.security;
 
+import com.parent.ws.app.security.filters.AuthenticationFilter;
+import com.parent.ws.app.security.filters.AuthorizationFilter;
 import com.parent.ws.app.service.protocols.UserService;
 
 import org.springframework.core.env.Environment;
@@ -33,11 +35,23 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .addFilter(new AuthenticationFilter(authenticationManager(), environment));
+                .addFilter(getAuthenticationFilter())
+                .addFilter(getAuthorizationFilter());
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    }
+
+    public AuthenticationFilter getAuthenticationFilter() throws Exception {
+        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), environment);
+        filter.setFilterProcessesUrl(SecurityConstants.LOGIN_URL);
+
+        return filter;
+    }
+
+    public AuthorizationFilter getAuthorizationFilter() throws Exception {
+        return new AuthorizationFilter(authenticationManager(), environment);
     }
 }
