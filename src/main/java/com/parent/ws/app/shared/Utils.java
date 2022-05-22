@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 public class Utils {
     private final Random RANDOM = new SecureRandom();
     private final String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    // private final int ITERATIONS = 10000;
-    // private final int KEY_LENGTH = 256;
 
     public String generateUserId(int length) {
         return generateRandomString(length);

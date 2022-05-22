@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,7 +43,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             throws AuthenticationException {
 
         try {
-            UserLoginRequestModel credentials = new ObjectMapper().readValue(req.getInputStream(),
+            ServletInputStream inputStream = req.getInputStream();
+            UserLoginRequestModel credentials = new ObjectMapper().readValue(inputStream,
                     UserLoginRequestModel.class);
 
             String userEmail = credentials.getEmail();
