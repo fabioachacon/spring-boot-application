@@ -1,5 +1,6 @@
 package com.parent.ws.app.security;
 
+import com.parent.ws.app.constants.SecurityConstants;
 import com.parent.ws.app.security.filters.AuthenticationFilter;
 import com.parent.ws.app.security.filters.AuthorizationFilter;
 import com.parent.ws.app.service.protocols.UserService;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
@@ -39,7 +41,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .addFilter(getAuthenticationFilter())
-                .addFilter(getAuthorizationFilter());
+                .addFilter(getAuthorizationFilter())
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
 
     @Override

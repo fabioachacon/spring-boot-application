@@ -1,4 +1,4 @@
-package com.parent.ws.app.persistence;
+package com.parent.ws.app.persistence.entities;
 
 import java.io.Serializable;
 

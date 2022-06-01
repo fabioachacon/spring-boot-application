@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parent.ws.app.SpringApplicationContext;
-import com.parent.ws.app.security.SecurityConstants;
+import com.parent.ws.app.constants.SecurityConstants;
 import com.parent.ws.app.service.protocols.UserService;
 import com.parent.ws.app.shared.dto.UserDto;
 import com.parent.ws.app.ui.models.request.UserLoginRequestModel;
@@ -81,7 +81,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String tokenWithPrefix = SecurityConstants.TOKEN_PREFIX + token;
         res.addHeader(SecurityConstants.HEADER_STRING, tokenWithPrefix);
         res.addHeader("UserID", userDto.getUserId());
-
     }
 
 }

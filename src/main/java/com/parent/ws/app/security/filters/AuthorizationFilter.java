@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.parent.ws.app.security.SecurityConstants;
+import com.parent.ws.app.constants.SecurityConstants;
 
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;

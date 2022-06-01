@@ -1,4 +1,4 @@
-package com.parent.ws.app.security;
+package com.parent.ws.app.constants;
 
 public class SecurityConstants {
     public static final long EXPIRATION_DATE = 864000000;
