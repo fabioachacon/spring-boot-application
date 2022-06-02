@@ -1,5 +1,8 @@
 package com.parent.ws.app.ui.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.parent.ws.app.constants.ErrorMessages;
 import com.parent.ws.app.constants.RequestOperationName;
 import com.parent.ws.app.constants.RequestOperationStatus;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -73,9 +77,30 @@ public class UserController {
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel status = new OperationStatusModel();
         status.setOperationName(RequestOperationName.DELETE.name());
-        status.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+        try {
+            userService.deleteUser(id);
+            status.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } catch (Exception e) {
+            status.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
 
         return status;
+    }
+
+    @GetMapping
+    public List<UserDetailsResponseModel> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        List<UserDetailsResponseModel> users = new ArrayList<UserDetailsResponseModel>();
+        List<UserDto> usersList = userService.getUsers(page, limit);
+
+        usersList.forEach(user -> {
+            UserDetailsResponseModel userModel = new UserDetailsResponseModel();
+            BeanUtils.copyProperties(user, userModel);
+            users.add(userModel);
+        });
+
+        return users;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.parent.ws.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.parent.ws.app.constants.ErrorMessages;
 import com.parent.ws.app.exceptions.UserServiceException;
@@ -12,6 +13,9 @@ import com.parent.ws.app.shared.dto.UserDto;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -81,6 +85,16 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(userEntity);
     }
 
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        UserEntity userEntity = getUserEntityById(userId);
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity, userDto);
+
+        return userDto;
+
+    }
+
     public UserEntity getUserEntityById(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
@@ -91,17 +105,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserByUserId(String userId) {
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException(userId);
-        }
+    public List<UserDto> getUsers(int page, int limit) {
+        List<UserDto> userDtoList = new ArrayList<UserDto>();
+        Pageable pageableRequest = PageRequest.of(page, limit);
 
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userEntity, userDto);
+        Page<UserEntity> userPage = userRepository.findAll(pageableRequest);
+        List<UserEntity> userEntityList = userPage.getContent();
 
-        return userDto;
+        userEntityList.forEach(userEntity -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userEntity, userDto);
+            userDtoList.add(userDto);
+        });
 
+        return userDtoList;
     }
 
     @Override
