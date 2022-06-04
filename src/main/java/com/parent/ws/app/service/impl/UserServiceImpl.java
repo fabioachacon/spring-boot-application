@@ -9,8 +9,10 @@ import com.parent.ws.app.persistence.entities.UserEntity;
 import com.parent.ws.app.persistence.repositories.UserRepository;
 import com.parent.ws.app.service.protocols.UserService;
 import com.parent.ws.app.shared.Utils;
+import com.parent.ws.app.shared.dto.AddressDto;
 import com.parent.ws.app.shared.dto.UserDto;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,7 +26,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final int PUBLIC_USER_ID_LENGHT = 30;
+    private static final int PUBLIC_ID_LENGHT = 30;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,19 +47,25 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
         }
 
-        String userPublicId = utils.generateUserId(PUBLIC_USER_ID_LENGHT);
+        ModelMapper mapper = new ModelMapper();
+
+        String userPublicId = utils.generatePublicId(PUBLIC_ID_LENGHT);
         String userEncryptedPassword = bCryptPasswordEncoder.encode(userPlainTextPassword);
 
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
+        List<AddressDto> addressDtoList = userDto.getAddresses();
+        for (int i = 0; i < addressDtoList.size(); i++) {
+            AddressDto address = userDto.getAddresses().get(i);
+            address.setUserDetails(userDto);
+            address.setAddressId(utils.generatePublicId(PUBLIC_ID_LENGHT));
+            userDto.getAddresses().set(i, address);
+        }
 
+        UserEntity userEntity = mapper.map(userDto, UserEntity.class);
         userEntity.setUserId(userPublicId);
         userEntity.setEncryptedPassword(userEncryptedPassword);
 
         UserEntity persistedUserDetails = userRepository.save(userEntity);
-        UserDto userDetailsDto = new UserDto();
-
-        BeanUtils.copyProperties(persistedUserDetails, userDetailsDto);
+        UserDto userDetailsDto = mapper.map(persistedUserDetails, UserDto.class);
 
         return userDetailsDto;
     }

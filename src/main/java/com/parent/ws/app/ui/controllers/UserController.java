@@ -13,6 +13,7 @@ import com.parent.ws.app.ui.models.request.UserDetailsRequestModel;
 import com.parent.ws.app.ui.models.response.OperationStatusModel;
 import com.parent.ws.app.ui.models.response.UserDetailsResponseModel;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,27 +49,26 @@ public class UserController {
             throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
         }
 
-        UserDetailsResponseModel restResponse = new UserDetailsResponseModel();
-        UserDto userDto = new UserDto();
+        ModelMapper mapper = new ModelMapper();
 
-        BeanUtils.copyProperties(userDetails, userDto);
-        UserDto updatedUser = userService.createUser(userDto);
+        UserDto userDto = mapper.map(userDetails, UserDto.class);
+        UserDto createdUser = userService.createUser(userDto);
+        UserDetailsResponseModel response = mapper.map(createdUser, UserDetailsResponseModel.class);
 
-        BeanUtils.copyProperties(updatedUser, restResponse);
-
-        return restResponse;
+        return response;
     }
 
     @PutMapping(path = "/{id}")
     public UserDetailsResponseModel updateUser(@PathVariable String id,
             @RequestBody UserDetailsRequestModel userDetails) {
+
         UserDetailsResponseModel restResponse = new UserDetailsResponseModel();
         UserDto userDto = new UserDto();
 
-        BeanUtils.copyProperties(userDetails, userDto);
-        UserDto createdUser = userService.updateUser(id, userDto);
+        BeanUtils.copyProperties(userDetails, UserDto.class);
+        UserDto updatedUser = userService.updateUser(id, userDto);
 
-        BeanUtils.copyProperties(createdUser, restResponse);
+        BeanUtils.copyProperties(updatedUser, restResponse);
 
         return restResponse;
     }

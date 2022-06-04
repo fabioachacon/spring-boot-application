@@ -81,6 +81,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String tokenWithPrefix = SecurityConstants.TOKEN_PREFIX + token;
         res.addHeader(SecurityConstants.HEADER_STRING, tokenWithPrefix);
         res.addHeader("UserID", userDto.getUserId());
+
+        res.setContentType("application/json");
+        res.setCharacterEncoding("UTF-8");
+        res.getWriter().write(
+                "{\"" + SecurityConstants.HEADER_STRING + "\":\"" + tokenWithPrefix + "\"}");
     }
 
 }
